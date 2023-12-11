@@ -5,6 +5,9 @@ import cesur.examen.core.worker.Worker;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,17 +26,16 @@ import java.util.List;
 public class FileUtils {
 
     public static void toCSV(String fileName, List<Worker> workers) {
-        throw new RuntimeException("Not implemented yet!");
+        //Uncomment and implement body method!...
 
-        /*
-        Uncomment and implement body method!...
-
-        try (...) {
-
+        try (FileWriter escribir =new FileWriter(fileName)) {
+            for (Worker worker : workers){
+                String linea = String.format("%d,%s,%s,%s", worker.getId(), worker.getName(), worker.getDni(), worker.getFrom());
+                escribir.write(linea + System.lineSeparator());
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
 
-        */
+        }
     }
 }

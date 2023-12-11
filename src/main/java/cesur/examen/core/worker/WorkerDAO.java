@@ -22,9 +22,9 @@ import java.util.List;
 @Log public class WorkerDAO implements DAO<Worker> {
 
     /* Please, use this constants for the queries */
-    private final String QUERY_ORDER_BY = "";
+    private final String QUERY_ORDER_BY = "SELECT * FROM trabajador ORDER BY desde";
     private final String QUERY_BY_DNI = "Select * from trabajador where dni=?";
-    private final String UPDATE_BY_ID = "";
+    private final String UPDATE_BY_ID = "UPDATE trabajador SET nombre=?, dni=?, desde=? WHERE id=?";
 
     @Override
     public Worker save(Worker worker) {
@@ -40,6 +40,19 @@ import java.util.List;
     @Override
     public Worker update(Worker worker) {
         Worker out = null;
+        try (PreparedStatement st = JDBCUtils.getConn().prepareStatement(UPDATE_BY_ID)) {
+            st.setString(1, worker.getName());
+            st.setString(2, worker.getDni());
+            st.setDate(3, JDBCUtils.dateUtilToSQL(worker.getFrom()));
+            st.setLong(4, worker.getId());
+            int rowsAffected = st.executeUpdate();
+            if (rowsAffected > 0) {
+                out = worker;
+            }
+        } catch (SQLException e) {
+            log.severe("Error in update()");
+            throw new RuntimeException(e);
+        }
 
         /* Make implementation here ...  */
 
@@ -104,7 +117,20 @@ import java.util.List;
         ArrayList<Worker> out = new ArrayList<>(0);
 
         /* Make implementation here ...  */
-
+        try (Statement st = JDBCUtils.getConn().createStatement()) {
+            ResultSet rs = st.executeQuery(QUERY_ORDER_BY);
+            while (rs.next()) {
+                Worker w = new Worker();
+                w.setId(rs.getLong("id"));
+                w.setName(rs.getString("nombre"));
+                w.setDni(rs.getString("dni"));
+                w.setFrom(rs.getDate("desde"));
+                out.add(w);
+            }
+        } catch (SQLException e) {
+            log.severe("Error in getAllOrderByFrom()");
+            throw new RuntimeException(e);
+        }
         return out;
     }
 }

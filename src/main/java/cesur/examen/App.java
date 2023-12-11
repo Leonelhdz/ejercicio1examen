@@ -27,7 +27,7 @@ public class App
 
 
     // Put your full name in the constant value
-    static final String STUDENT_NAME = "Francisco Romero";
+    static final String STUDENT_NAME = "Francisco Leonel Soriano Hernandez";
 
     // filename for csv output.
     static final String FILE_NAME = "output.csv";
@@ -68,6 +68,8 @@ public class App
         System.out.print("Renovating the oldest worker... ");
         oldest = WorkerService.renovateWorker( oldest.getDni() );
         System.out.println(oldest.toString() + " renovated successfully!");
+
+
 
         // Save all the workers to file
         System.out.print("Saving all workers to csv file... ");
